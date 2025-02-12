@@ -1,0 +1,336 @@
+{
+	"info": {
+		"_postman_id": "5a874d51-6eef-4d09-87f4-b0049d6df4db",
+		"name": "Temp_TSC_Test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"   pm.response.to.have.status(200); ",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"aaaUser\": {\r\n        \"attributes\": {\r\n            \"name\": \"{{username}}\",\r\n            \"pwd\": \"{{password}}\"\r\n        }\r\n    }\r\n} "
+				},
+				"url": {
+					"raw": "https://{{aci}}/api/aaaLogin.json",
+					"protocol": "https",
+					"host": [
+						"{{aci}}"
+					],
+					"path": [
+						"api",
+						"aaaLogin.json"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "BRKACI-2770-QUERY-TEMPLATE",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"   pm.response.to.have.status(200); ",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"aaaUser\": {\r\n        \"attributes\": {\r\n            \"name\": \"{{username}}\",\r\n            \"pwd\": \"{{password}}\"\r\n        }\r\n    }\r\n} "
+				},
+				"url": {
+					"raw": "https://{{aci}}:{{port}}/api/node/class/fvBD.json?query-target&target-subtree-class&query-target-filter&rsp-subtree&rsp-subtree-class&rsp-subtree-filter&rsp-subtree-include&order-by",
+					"protocol": "https",
+					"host": [
+						"{{aci}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"node",
+						"class",
+						"fvBD.json"
+					],
+					"query": [
+						{
+							"key": "query-target",
+							"value": null,
+							"description": "{{ self | children | subtree }}"
+						},
+						{
+							"key": "target-subtree-class",
+							"value": null,
+							"description": "{{ class-name }}"
+						},
+						{
+							"key": "query-target-filter",
+							"value": null,
+							"description": "{{ filter-expression }} e.g. and(wcard(class.attribute,\"object\"}}"
+						},
+						{
+							"key": "rsp-subtree",
+							"value": null,
+							"description": "{{ no | children | full }}"
+						},
+						{
+							"key": "rsp-subtree-class",
+							"value": null,
+							"description": "{{ class-name }}"
+						},
+						{
+							"key": "rsp-subtree-filter",
+							"value": null,
+							"description": "{{ filter-expression }}"
+						},
+						{
+							"key": "rsp-subtree-include",
+							"value": null,
+							"description": "{{ faults | health | etc }}"
+						},
+						{
+							"key": "order-by",
+							"value": null,
+							"description": "classname.property {{ asc | desc }}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "BRKACI-2770-QUERY-BD",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"   pm.response.to.have.status(200); ",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"aaaUser\": {\r\n        \"attributes\": {\r\n            \"name\": \"{{username}}\",\r\n            \"pwd\": \"{{password}}\"\r\n        }\r\n    }\r\n} "
+				},
+				"url": {
+					"raw": "https://{{aci}}:{{port}}/api/node/class/fvBD.json?query-target=self&query-target-filter=and(wcard(fvBD.dn,\"DCNLAB_BD\"))&rsp-subtree=full",
+					"protocol": "https",
+					"host": [
+						"{{aci}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"node",
+						"class",
+						"fvBD.json"
+					],
+					"query": [
+						{
+							"key": "query-target",
+							"value": "self",
+							"description": "{{ self | children | subtree }}"
+						},
+						{
+							"key": "target-subtree-class",
+							"value": null,
+							"description": "{{ class-name }}",
+							"disabled": true
+						},
+						{
+							"key": "query-target-filter",
+							"value": "and(wcard(fvBD.dn,\"DCNLAB_BD\"))",
+							"description": "{{ filter-expression }} e.g. and(wcard(class.attribute,\"object\"}}"
+						},
+						{
+							"key": "rsp-subtree",
+							"value": "full",
+							"description": "{{ no | children | full }}"
+						},
+						{
+							"key": "rsp-subtree-class",
+							"value": null,
+							"description": "{{ class-name }}",
+							"disabled": true
+						},
+						{
+							"key": "rsp-subtree-filter",
+							"value": null,
+							"description": "{{ filter-expression }}",
+							"disabled": true
+						},
+						{
+							"key": "rsp-subtree-include",
+							"value": null,
+							"description": "{{ faults | health | etc }}",
+							"disabled": true
+						},
+						{
+							"key": "order-by",
+							"value": null,
+							"description": "classname.property {{ asc | desc }}",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "tn-DCNLAB-BD-QUERY",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"   pm.response.to.have.status(200); ",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"aaaUser\": {\r\n        \"attributes\": {\r\n            \"name\": \"{{username}}\",\r\n            \"pwd\": \"{{password}}\"\r\n        }\r\n    }\r\n} "
+				},
+				"url": {
+					"raw": "https://{{aci}}:{{port}}/api/mo/uni/tn-DCNLAB.json?query-target=subtree&target-subtree-class=fvBD",
+					"protocol": "https",
+					"host": [
+						"{{aci}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"mo",
+						"uni",
+						"tn-DCNLAB.json"
+					],
+					"query": [
+						{
+							"key": "query-target",
+							"value": "subtree",
+							"description": "{{ self | children | subtree }}"
+						},
+						{
+							"key": "target-subtree-class",
+							"value": "fvBD",
+							"description": "{{ class-name }}"
+						},
+						{
+							"key": "query-target-filter",
+							"value": null,
+							"description": "{{ filter-expression }} e.g. and(wcard(class.attribute,\"object\"}}",
+							"disabled": true
+						},
+						{
+							"key": "rsp-subtree",
+							"value": null,
+							"description": "{{ no | children | full }}",
+							"disabled": true
+						},
+						{
+							"key": "rsp-subtree-class",
+							"value": null,
+							"description": "{{ class-name }}",
+							"disabled": true
+						},
+						{
+							"key": "rsp-subtree-filter",
+							"value": null,
+							"description": "{{ filter-expression }}",
+							"disabled": true
+						},
+						{
+							"key": "rsp-subtree-include",
+							"value": null,
+							"description": "{{ faults | health | etc }}",
+							"disabled": true
+						},
+						{
+							"key": "order-by",
+							"value": null,
+							"description": "classname.property {{ asc | desc }}",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

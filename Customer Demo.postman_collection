@@ -1,0 +1,131 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Customer Demo",
+		"_postman_id": "7d99ca15-bf8f-1517-2be4-e210c1b6c588",
+		"description": "Customer Demos",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1.0-Login-to-APIC",
+			"request": {
+				"url": "https://{{apic-ip}}/api/aaaLogin.xml",
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "<aaaUser name={{user}} pwd={{password}}/>"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "2.1-get-Tenant-list",
+			"request": {
+				"url": "https://{{apic-ip}}/api/node/class/fvTenant.xml",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "2.1-get-Endpoint-list",
+			"request": {
+				"url": "https://{{apic-ip}}/api/node/class/fvCEp.xml",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": "get list of global endpoints"
+			},
+			"response": []
+		},
+		{
+			"name": "3.1-create test Tenant",
+			"request": {
+				"url": "https://{{apic-ip}}/api/node/mo/uni.json",
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "payload{\"fvTenant\":{\"attributes\":{\"dn\":\"uni/tn-Damon-Test\",\"name\":\"Damon-Test\",\"rn\":\"tn-Damon-Test\",\"status\":\"created\"},\"children\":[]}}"
+				},
+				"description": "create test Tenant on ACI"
+			},
+			"response": []
+		},
+		{
+			"name": "3.2-create-vrf-bd",
+			"request": {
+				"url": "https://{{apic-ip}}/api/node/mo/uni/tn-Damon-Test.json",
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"fvTenant\":{\"attributes\":{\"dn\":\"uni/tn-Damon-Test\",\"status\":\"modified\"},\"children\":[{\"fvBD\":{\"attributes\":{\"dn\":\"uni/tn-Damon-Test/BD-ACME-BD\",\"name\":\"ACME-BD\",\"rn\":\"BD-ACME-BD\",\"status\":\"created\"},\"children\":[{\"fvRsCtx\":{\"attributes\":{\"tnFvCtxName\":\"ACME-VRF\",\"status\":\"created,modified\"},\"children\":[]}}]}},{\"fvCtx\":{\"attributes\":{\"dn\":\"uni/tn-Damon-Test/ctx-ACME-VRF\",\"name\":\"ACME-VRF\",\"rn\":\"ctx-ACME-VRF\",\"status\":\"created\"},\"children\":[]}}]}}\n"
+				},
+				"description": "create vrf and bridge domain"
+			},
+			"response": []
+		},
+		{
+			"name": "3.4-create-app-profile",
+			"request": {
+				"url": "https://{{apic-ip}}/api/node/mo/uni/tn-Damon-Test/ap-ACME-App.json",
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"fvAp\":{\"attributes\":{\"dn\":\"uni/tn-Damon-Test/ap-ACME-App\",\"name\":\"ACME-App\",\"rn\":\"ap-ACME-App\",\"status\":\"created\"},\"children\":[]}}"
+				},
+				"description": "create application profile"
+			},
+			"response": []
+		},
+		{
+			"name": "3.5-delete-app-profile",
+			"request": {
+				"url": "https://{{apic-ip}}/api/node/mo/uni/tn-Damon-Test.json",
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"fvTenant\":{\"attributes\":{\"dn\":\"uni/tn-Damon-Test\",\"status\":\"modified\"},\"children\":[{\"fvAp\":{\"attributes\":{\"dn\":\"uni/tn-Damon-Test/ap-ACME-App\",\"status\":\"deleted\"},\"children\":[]}}]}}"
+				},
+				"description": "delete application profile"
+			},
+			"response": []
+		},
+		{
+			"name": "3.7-create-initial-EGP",
+			"request": {
+				"url": "https://{{apic-ip}}/api/node/mo/uni/tn-Damon-Test/ap-ACME-App/epg-EPG-ACME-1.json",
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"fvAEPg\": {\n        \"attributes\": {\n            \"dn\": \"uni/tn-Damon-Test/ap-ACME-App/epg-EPG-ACME-1\",\n            \"name\": \"EPG-ACME-1\",\n            \"rn\": \"epg-EPG-ACME-1\",\n            \"status\": \"created\"\n        },\n        \"children\": [\n            {\n                \"fvRsBd\": {\n                    \"attributes\": {\n                        \"status\": \"created,modified\",\n                        \"tnFvBDName\": \"ACME-BD\"\n                    },\n                    \"children\": []\n                }\n            }\n        ]\n    }\n}"
+				},
+				"description": "create one EPG "
+			},
+			"response": []
+		},
+		{
+			"name": "3.9-create-second-BD-EPG-compound-task",
+			"request": {
+				"url": "https://{{apic-ip}}/api/mo/uni.xml",
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "<fvTenant name=\"Damon-Test\" rn=\"tn-Damon-Test\">\n  <fvAp name=\"ACME-App\" prio=\"unspecified\" rn=\"ap-ACME-App\">\n    <fvAEPg isAttrBasedEPg=\"no\" matchT=\"AtleastOne\" name=\"ACME-New-EPG-2\" pcEnfPref=\"unenforced\" prefGrMemb=\"exclude\" prio=\"unspecified\" rn=\"epg-ACME-New-EPG-2\">\n      <fvRsCustQosPol rn=\"rscustQosPol\"/>\n      <fvRsBd rn=\"rsbd\" tnFvBDName=\"ACME-BD-2\"/>\n    </fvAEPg>\n  </fvAp>\n  <fvBD arpFlood=\"no\" ipLearning=\"yes\" limitIpLearnToSubnets=\"no\" llAddr=\"::\" mac=\"00:22:BD:F8:19:FF\" mcastAllow=\"no\" multiDstPktAct=\"bd-flood\" name=\"ACME-BD-2\" rn=\"BD-ACME-BD-2\" type=\"regular\" unicastRoute=\"yes\" unkMacUcastAct=\"proxy\" unkMcastAct=\"flood\" vmac=\"not-applicable\">\n    <fvRsBDToNdP rn=\"rsBDToNdP\"/>\n    <fvRsCtx rn=\"rsctx\"/>\n    <fvRsIgmpsn rn=\"rsigmpsn\"/>\n    <fvRsBdToEpRet resolveAct=\"resolve\" rn=\"rsbdToEpRet\"/>\n  </fvBD>\n</fvTenant>"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
